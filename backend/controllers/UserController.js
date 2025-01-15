@@ -9,7 +9,7 @@ const jwtSecret = process.env.JWT_SECRET
 //Generate user token
 const generateToken = (id) => {
     return jwt.sign({id}, jwtSecret, {
-        expiresIn: "7d"
+        expiresIn: "7d",
     })
 }
 
@@ -77,9 +77,17 @@ const login =  async (req, res) => {
 
 }
 
+//Get current logged in user
+const getCurrentUser = async (req, res) => {
+    const user = req.user
+
+    res.status(200).json(user)
+}
+
 module.exports = {
     register,
-    login
+    login,
+    getCurrentUser,
     
 }
 
