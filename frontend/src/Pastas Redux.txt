@@ -1,0 +1,8 @@
+Na pasta Utils coloco um arquivo (config) que é o de configuração das requisições que faço para para o servidor, então configuro as requisições que vai vir imagem a se eu for deletar algo, e se for pra pegar apenas caracteres, para verificar se tem o token e deixar ele dinamico
+
+
+Na pasta de services é onde basicamente eu faço a comunicação do meu front com o backend 
+
+No slices é aonde eu configuro a parte de respostar tipo json.(200), ou json(404) e assim por diante
+
+
