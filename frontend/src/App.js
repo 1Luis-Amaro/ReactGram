@@ -3,6 +3,10 @@ import "./App.css";
 //router
 import {BrowserRouter, Routes, Route, Navigate} from 'react-router-dom'
 
+//Components
+import NavBar from "./components/NavBar";
+import Footer from "./components/Footer";
+
 //Pages
 import Home from "./pages/Home/Home";
 import Login from "./pages/Auth/Login";
@@ -12,11 +16,13 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
+      <NavBar/>
         <Routes>
           <Route path="/" element={<Home/>} />
           <Route path="/login" element={<Login/>}/>
           <Route path="/register" element={<Register/>} />
         </Routes>
+        <Footer/>
       </BrowserRouter>
     </div>
   );
