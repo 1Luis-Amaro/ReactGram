@@ -58,13 +58,13 @@ const login = async (req, res) => {
 
   //Check if user exists
   if (!user) {
-    res.status(404).json({ errors: ["Usuário não encontrado"] });
-    return;
+    return res.status(404).json({ errors: ["Usuário não encontrado"] });
+    
   }
 
   //Check if password matches
   if (!(await bcrypt.compare(password, user.password))) {
-    res.status(422).json({ errors: ["Senha inválida."] });
+    return res.status(422).json({ errors: ["Senha inválida."] });
   }
 
   //Return user with token
@@ -73,7 +73,7 @@ const login = async (req, res) => {
     profileImage: user.profileImage,
     token: generateToken(user._id),
   });
-};
+};  
 
 //Get current logged in user
 const getCurrentUser = async (req, res) => {
