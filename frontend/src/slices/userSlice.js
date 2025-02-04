@@ -30,7 +30,7 @@ export const userSlice = createSlice({
       state.message = null;
     },
   },
-  extraReducer: (builder) => {
+  extraReducers: (builder) => {
     builder
       .addCase(profile.pending, (state) => {
         state.loading = true;
