@@ -40,7 +40,7 @@ const getUserDetails = async(id) => {
 
         return res
     } catch (error) {
-        console.log(error)
+        console.log(error + "você é burro")
     }
     
 } 

@@ -90,15 +90,15 @@ const EditProfile = () => {
         {" "}
         Adicione uma imagem de perfil e conte mais sobre você...
       </p>
-      {(user.profileImage || previewImage) && (
+      {(user?.profileImage || previewImage) && (
         <img
           className="profile-image"
           src={
             previewImage
               ? URL.createObjectURL(previewImage)
-              : `${uploads}/users/${user.profileImage}`
+              : `${uploads}/users/${user?.profileImage}`
           }
-          alt={user.name}
+          alt={user?.name || "usuário"}
         />
       )}
       <form onSubmit={handleSubmit}>
