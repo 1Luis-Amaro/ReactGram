@@ -32,5 +32,5 @@ router.put(
   imageUpload.single("profileImage"),
   update
 );
-router.get("/:id", getUserbyId )
+router.get("/:id", getUserbyId)
 module.exports = router;

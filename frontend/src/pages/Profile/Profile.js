@@ -23,7 +23,7 @@ const Profile = () => {
 
     const dispatch = useDispatch()
 
-    const {user = {}, loading} = useSelector((state) => state.user)
+    const {user, loading} = useSelector((state) => state.user)
     const {user: userAuth} = useSelector((state) => state.auth)
 
     //photo
@@ -33,9 +33,6 @@ const Profile = () => {
         console.log("Chamando getUserDetails com id:", id)
         dispatch(getUserDetails(id))
     }, [dispatch, id])
-
-    console.log("VAI SEGURANDO O USUARIO", user)
-
 
 
     if(loading) {
