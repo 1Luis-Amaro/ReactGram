@@ -8,7 +8,7 @@ export const requestConfig = (method, data, token = null, image = null) => {
     if(image){
         config = {
             method,
-            body: data,
+            body: data, 
             headers: {}
         }
     } else if(method === "DELETE" || data === null) {
@@ -27,9 +27,10 @@ export const requestConfig = (method, data, token = null, image = null) => {
     }
 
     if(token) {
+        console.log("Adicionando token ao header:", token); // Depuração
         config.headers.Authorization = `Bearer ${token}`
     }
 
-    return config
+    return config   
 
 }

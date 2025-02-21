@@ -13,20 +13,32 @@ const initialState = {
 
 //Publish user photo
 export const publishPhoto = createAsyncThunk(
-    "photo/publish",
-    async(photo, thunkAPI) => {
-        const token = thunkAPI.getState().auth.user.token
+  "photo/publish",
+  async (photo, thunkAPI) => {
+    try {
+      // Obtém o token do estado Redux
+      const token = thunkAPI.getState().auth?.user?.token;
+    
 
-        const data = await photoService.publishPhoto(photo, token)
+      if (!token) {
+        return thunkAPI.rejectWithValue("Token ausente ou inválido.");
+      }
 
-        //Check for erros
-        if(data.errors) {
-            return thunkAPI.rejectWithValue(data.errors[0])
-        }
+      // Faz a requisição ao serviço
+      const data = await photoService.publishPhoto(photo, token);
 
-        return data
+      // Verifica se há erros na resposta
+      if (data.errors) {
+        return thunkAPI.rejectWithValue(data.errors[0] || "Erro desconhecido.");
+      }
+
+      return data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message || "Erro ao publicar foto.");
     }
-)
+  }
+);
+
 
 export const photoSlice = createSlice({
     name: "photo",
