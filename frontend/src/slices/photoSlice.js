@@ -13,32 +13,32 @@ const initialState = {
 
 //Publish user photo
 export const publishPhoto = createAsyncThunk(
-  "photo/publish",
-  async (photo, thunkAPI) => {
-    try {
-      // Obtém o token do estado Redux
-      const token = thunkAPI.getState().auth?.user?.token;
-    
+    "photo/publish",
+    async(photo, thunkAPI) => {
+        const token = thunkAPI.getState().auth.user.token
 
-      if (!token) {
-        return thunkAPI.rejectWithValue("Token ausente ou inválido.");
-      }
+        const data = await photoService.publishPhoto(photo, token)
 
-      // Faz a requisição ao serviço
-      const data = await photoService.publishPhoto(photo, token);
+        //Check for erros
+        if(data.errors) {
+            return thunkAPI.rejectWithValue(data.errors[0])
+        }
 
-      // Verifica se há erros na resposta
-      if (data.errors) {
-        return thunkAPI.rejectWithValue(data.errors[0] || "Erro desconhecido.");
-      }
-
-      return data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.message || "Erro ao publicar foto.");
+        return data
     }
-  }
-);
+) 
 
+//Get user photos
+export const getUserPhotos = createAsyncThunk(
+  "photo/userphotos",
+  async(id, thunkAPI) => {
+    const token = thunkAPI.getState().auth.user.token
+
+    const data = await photoService.getUserPhotos(id, token)
+
+    return data
+  }
+)
 
 export const photoSlice = createSlice({
     name: "photo",
@@ -66,6 +66,17 @@ export const photoSlice = createSlice({
             state.loading = false;
             state.error = action.payload;
             state.photo = {}
+          })
+          .addCase(getUserPhotos.pending, (state) => {
+            state.loading = true;
+            state.error = false;
+          })
+          .addCase(getUserPhotos.fulfilled, (state, action) => {
+            state.loading = false;
+            state.success = true;
+            state.error = null;
+            state.photos = action.payload;
+           
           })
         }
 })
