@@ -27,7 +27,6 @@ export const requestConfig = (method, data, token = null, image = null) => {
     }
 
     if(token) {
-        console.log("Adicionando token ao header:", token); // Depuração
         config.headers.Authorization = `Bearer ${token}`
     }
 

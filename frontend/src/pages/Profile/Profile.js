@@ -27,7 +27,7 @@ const Profile = () => {
 
   const { user, loading } = useSelector((state) => state.user);
   const { user: userAuth } = useSelector((state) => state.auth);
-  console.log("Usuário autenticado:", userAuth);
+  
   const {
     photos,
     loading: loadingPhoto,
@@ -158,5 +158,6 @@ const Profile = () => {
     </div>
   );
 };
+
 
 export default Profile;
