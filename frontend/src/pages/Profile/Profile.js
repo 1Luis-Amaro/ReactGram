@@ -18,7 +18,6 @@ import { useResetComponentMessage } from "../../hooks/useResetComponent";
 import { getUserDetails } from "../../slices/userSlice";
 import {
   publishPhoto,
-  resetMessage,
   getUserPhotos,
   deletePhoto,
   updatePhoto,
