@@ -11,6 +11,8 @@ import { BsFillEyeFill, BsPencilFill, BsXLg } from "react-icons/bs";
 import { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
+import { useResetComponentMessage } from "../../hooks/useResetComponent";
+
 
 //redux
 import { getUserDetails } from "../../slices/userSlice";
@@ -26,6 +28,8 @@ const Profile = () => {
   const { id } = useParams();
 
   const dispatch = useDispatch();
+
+  const resetMessage = useResetComponentMessage(dispatch)
 
   const { user, loading } = useSelector((state) => state.user);
   const { user: userAuth } = useSelector((state) => state.auth);
@@ -62,11 +66,6 @@ const Profile = () => {
     setImage(image);
   };
 
-  const resetComponentMessage = () => {
-    setTimeout(() => {
-        dispatch(resetMessage());
-      }, 2000);
-  }
 
   const submitHandle = (e) => {
     e.preventDefault();
@@ -87,13 +86,13 @@ const Profile = () => {
 
     setTitle("");
 
-   
+    resetMessage()
   };
   
   const handleDelete = (id) => {
     dispatch(deletePhoto(id))
 
-    resetComponentMessage()
+    resetMessage()
 
 };
 
@@ -114,7 +113,7 @@ const handleUpdate = (e) => {
 
     dispatch(updatePhoto(photoData))
 
-    resetComponentMessage()
+    resetMessage()
 }
 //Open edit form
 
