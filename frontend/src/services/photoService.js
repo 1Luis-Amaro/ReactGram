@@ -56,7 +56,7 @@ const updatePhoto = async (data, id, token) => {
 
     return res;
   } catch (error) {
-    console.loog(error);
+    console.log(error);
   }
 };
 
@@ -82,7 +82,9 @@ const like = async (id, token) => {
   try {
     const res = await fetch(api + "/photos/like/" + id, config)
       .then((res) => res.json())
-      .catch((err) => err);
+      .catch(err => err);
+
+      return res
   } catch (error) {
     console.log(error);
   }
