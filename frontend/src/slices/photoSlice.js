@@ -91,7 +91,7 @@ export const getPhoto = createAsyncThunk(
 );
 
 //Like a photo
-export const like = createAsyncThunk("photo/like", async(id, thunkAPI) => {
+export const like = createAsyncThunk("photo/like", async (id, thunkAPI) => {
   const token = thunkAPI.getState().auth.user.token;
   const data = await photoService.like(id, token);
 
@@ -101,6 +101,25 @@ export const like = createAsyncThunk("photo/like", async(id, thunkAPI) => {
 
   return data;
 });
+
+//Add comment to a photo
+export const comment = createAsyncThunk(
+  "photo/comment",
+  async (photoData, thunkAPI) => {
+    const token = thunkAPI.getState().auth.user.token;
+    const data = await photoService.comment(
+      { comment: photoData.comment },
+      photoData.id,
+      token
+    );
+
+    if (data.errors) {
+      return thunkAPI.rejectWithValue(data.errors[0]);
+    }
+
+    return data;
+  }
+);
 
 export const photoSlice = createSlice({
   name: "photo",
@@ -195,13 +214,13 @@ export const photoSlice = createSlice({
         state.success = true;
         state.error = null;
 
-        if(state.photo.likes) {
-          state.photo.likes.push(action.payload.userId)
+        if (state.photo.likes) {
+          state.photo.likes.push(action.payload.userId);
         }
 
         state.photos.map((photo) => {
           if (photo._id === action.payload.photoId) {
-            return photo.likes.push(action.payload.userId)
+            return photo.likes.push(action.payload.userId);
           }
           return photo;
         });
@@ -211,6 +230,20 @@ export const photoSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+
+      .addCase(comment.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.error = null;
+
+        state.photo.comments.push(action.payload.comment)
+       
+        state.message = action.payload.message;
+      })
+      .addCase(comment.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
   },
 });
 
