@@ -1,47 +1,63 @@
-import "./Home.css"
+import "./Home.css";
 
 //Components
-import LikeContainer from "../../components/LikeContainer"
-import PhotoItem from "../../components/PhotoItem"
-import { Link } from "react-router-dom"
+import LikeContainer from "../../components/LikeContainer";
+import PhotoItem from "../../components/PhotoItem";
+import { Link } from "react-router-dom";
 
 //Hooks
-import {useEffect} from "react"
-import { useSelector, useDispatch } from "react-redux"
-import { useResetComponentMessage } from "../../hooks/useResetComponent"
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useResetComponentMessage } from "../../hooks/useResetComponent";
 
 //Redux
-import { getPhotos, like } from "../../slices/photoSlice"
-
+import { getPhotos, like } from "../../slices/photoSlice";
 
 const Home = () => {
-    const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-    const resetMessage = useResetComponentMessage()
+  const resetMessage = useResetComponentMessage(dispatch);
 
-    const {user} = useSelector((state) => state.auth)
+  const { user } = useSelector((state) => state.auth);
 
-    const {photos, loading} = useSelector((state) => state.photo)
+  const { photos, loading } = useSelector((state) => state.photo);
 
-    //Load all photos
-    useEffect(() => {
-      dispatch(getPhotos())
-    }, [dispatch])
+  //Load all photos
+  useEffect(() => {
+    dispatch(getPhotos());
+  }, [dispatch]);
 
-    //Like a photo
-    const handleLike = (photo) => {
-      dispatch(like(photo._id))
+  //Like a photo
+  const handleLike = (photo) => {
+    dispatch(like(photo._id));
 
-      resetMessage()
-    }
+    resetMessage();
+  };
 
-    if(loading){
-      return <p>Carregando...</p>
-    }
+  if (loading) {
+    return <p>Carregando...</p>;
+  }
 
   return (
-    <div>Home</div>
-  )
-}
+    <div id="home">
+      {photos && 
+        photos.map((photo) => (
+        <div key={photo._id}>
+          <PhotoItem photo={photo} />
+          <LikeContainer photo={photo} user={user} handleLike={handleLike}/>
+          <Link className="btn" to={`/photos/${photo._id}`} >Ver mais</Link>
+        </div>
+      ))}
+      {photos && photos.length === 0 && (
+        
+          <h2 className="no-photos">
+           Ainda não há fotos publicadas, 
+           <Link to={`/users/${user._id}`}> Clique aqui</Link>
 
-export default Home
+          </h2>
+      )}
+        </div>
+  );
+};
+
+export default Home;
