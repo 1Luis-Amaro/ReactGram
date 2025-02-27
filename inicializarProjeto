@@ -1,2 +1,7 @@
 Frontend -> npm start
 backend -> npm run server 
+
+se estiver em um internet diferente mudar o acesso network no mongoDB
+login cluster:
+login:Luis
+senha:K7BN04CybxFQkYeR
