@@ -139,7 +139,7 @@ export const searchPhotos = createAsyncThunk(
   async (query, thunkAPI) => {
     const token = thunkAPI.getState().auth.user.token;
 
-    const data = await photoService.serachPhotos(query, token);
+    const data = await photoService.searchPhotos(query, token);
 
     return data;
   }
@@ -151,6 +151,9 @@ export const photoSlice = createSlice({
   reducers: {
     resetMessage: (state) => {
       state.message = null;
+    },
+    setMessage: (state, action) => {
+      state.message = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -291,5 +294,5 @@ export const photoSlice = createSlice({
   },
 });
 
-export const { resetMessage } = photoSlice.actions;
+export const { resetMessage, setMessage } = photoSlice.actions;
 export default photoSlice.reducer;

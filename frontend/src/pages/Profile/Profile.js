@@ -13,14 +13,15 @@ import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useResetComponentMessage } from "../../hooks/useResetComponent";
 
-
 //redux
+
 import { getUserDetails } from "../../slices/userSlice";
 import {
   publishPhoto,
   getUserPhotos,
   deletePhoto,
   updatePhoto,
+  setMessage,
 } from "../../slices/photoSlice";
 
 const Profile = () => {
@@ -28,11 +29,11 @@ const Profile = () => {
 
   const dispatch = useDispatch();
 
-  const resetMessage = useResetComponentMessage(dispatch)
+  const resetMessage = useResetComponentMessage(dispatch);
 
   const { user, loading } = useSelector((state) => state.user);
   const { user: userAuth } = useSelector((state) => state.auth);
-  
+
   const {
     photos,
     loading: loadingPhoto,
@@ -43,9 +44,12 @@ const Profile = () => {
   const [title, setTitle] = useState("");
   const [image, setImage] = useState("");
 
-  const [editId, setEditId] = useState("")
-  const [editImage, setEditImage] = useState("")
-  const [editTitle, setEditTitle] = useState("")
+  const [editId, setEditId] = useState("");
+  const [editImage, setEditImage] = useState("");
+  const [editTitle, setEditTitle] = useState("");
+
+
+
 
   //New form and edit form refs
   const newPhotoForm = useRef();
@@ -64,7 +68,6 @@ const Profile = () => {
     //update image state
     setImage(image);
   };
-
 
   const submitHandle = (e) => {
     e.preventDefault();
@@ -85,64 +88,75 @@ const Profile = () => {
 
     setTitle("");
 
-    resetMessage()
+    resetMessage();
   };
-  
+
   const handleDelete = (id) => {
-    dispatch(deletePhoto(id))
+    dispatch(deletePhoto(id));
 
-    resetMessage()
+    resetMessage();
+  };
 
-};
+  //show or hide forms
+  const hideOrShowForms = () => {
+    newPhotoForm.current.classList.toggle("hide");
+    editPhotoForm.current.classList.toggle("hide");
+  };
 
-//show or hide forms
-const hideOrShowForms = () => {
-    newPhotoForm.current.classList.toggle("hide")
-    editPhotoForm.current.classList.toggle("hide")
-}
-
-//Update a photo
-const handleUpdate = (e) => {
-    e.preventDefault()
+  //Update a photo
+  const handleUpdate = (e) => {
+    e.preventDefault();
 
     const photoData = {
-        title: editTitle,
-        id: editId
+      title: editTitle,
+      id: editId,
+    };
+
+    dispatch(updatePhoto(photoData));
+
+    resetMessage();
+  };
+  //Open edit form
+
+  const handleEdit = (photo) => {
+    if (editPhotoForm.current.classList.contains("hide")) {
+      hideOrShowForms();
     }
 
-    dispatch(updatePhoto(photoData))
+    setEditId(photo._id);
+    setEditTitle(photo.title);
+    setEditImage(photo.image);
+  };
 
-    resetMessage()
-}
-//Open edit form
 
-const handleEdit = (photo) => {
-    if(editPhotoForm.current.classList.contains("hide")) {
-        hideOrShowForms()
-    }
 
-    setEditId(photo._id)
-    setEditTitle(photo.title)
-    setEditImage(photo.image)
-}
-
-const handleCancelEdit = (e) => {
-    hideOrShowForms()
-}
+  const handleCancelEdit = (e) => {
+    e.preventDefault();
+    
+    dispatch(setMessage("Edição cancelada")); // Define a mensagem global
+    resetMessage(); // Aguarda 2s e reseta automaticamente
+    hideOrShowForms();
+  };;
+  
 
   if (loading) {
     return <p>Carregando...</p>;
   }
 
   return (
+    
     <div id="profile">
       <div className="profile-header">
         {user.profileImage && (
           <img src={`${uploads}/users/${user.profileImage}`} alt={user.name} />
         )}
         <div className="profile-description">
-          <h2>{user.name}</h2>
-          <p>{user.bio}</p>
+          {user && (
+            <>
+              <h2>{user.name}</h2>
+              <p>{user.bio}</p>
+            </>
+          )}
         </div>
       </div>
       {id === userAuth._id && (
@@ -170,25 +184,27 @@ const handleCancelEdit = (e) => {
             </form>
           </div>
           <div className="edit-photo hide" ref={editPhotoForm}>
-              <p>Editando:</p>
-              {editImage && (
-                <img src={`${uploads}/photos/${editImage}`} alt={editTitle} />
-              )}
-               <form onSubmit={handleUpdate}>
-                <input
-                  type="text"
-                  placeholder="Insira o novo título"
-                  onChange={(e) => setEditTitle(e.target.value)}
-                  value={editTitle || ""}
-                />
-                <input type="submit" value="Atualizar" />
-              <button className="cancel-btn" onClick={handleCancelEdit} >Cancelar edição</button>
-
-               </form>
-
+            <p>Editando:</p>
+            {editImage && (
+              <img src={`${uploads}/photos/${editImage}`} alt={editTitle} />
+            )}
+            <form onSubmit={handleUpdate}>
+              <input
+                type="text"
+                placeholder="Insira o novo título"
+                onChange={(e) => setEditTitle(e.target.value)}
+                value={editTitle || ""}
+              />
+              <input type="submit" value="Atualizar" />
+              <button className="cancel-btn" onClick={handleCancelEdit}>
+                Cancelar edição
+              </button>
+            </form>
           </div>
           {errorPhoto && <Message msg={errorPhoto} type="error" />}
           {messagePhoto && <Message msg={messagePhoto} type="success" />}
+          
+
         </>
       )}
 
@@ -207,10 +223,10 @@ const handleCancelEdit = (e) => {
                 {id === userAuth._id ? (
                   <div className="actions">
                     <Link to={`/photos/${photo._id}`}>
-                      <BsFillEyeFill  />
+                      <BsFillEyeFill />
                     </Link>
                     <BsPencilFill onClick={() => handleEdit(photo)} />
-                    <BsXLg  onClick={() => handleDelete(photo._id)} />
+                    <BsXLg onClick={() => handleDelete(photo._id)} />
                   </div>
                 ) : (
                   <Link className="btn" to={`/photos/${photo._id}`}>
@@ -226,6 +242,5 @@ const handleCancelEdit = (e) => {
     </div>
   );
 };
-
 
 export default Profile;
